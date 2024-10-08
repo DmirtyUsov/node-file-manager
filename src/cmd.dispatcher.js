@@ -1,44 +1,44 @@
-import { commentator } from "./commentator/index.js";
+import { commentator } from './commentator/index.js';
 
 const NO_ARGS = 0;
 const ONE_ARG = 1;
- 
+
 export const dispatch = (cmd, args) => {
   const argsCount = args ? args.length : 0;
-  console.log({cmd}, {argsCount});
+  console.log({ cmd }, { argsCount });
   switch (argsCount) {
     case NO_ARGS: {
       handleCmdWithNoArgs(cmd);
       break;
     }
     case ONE_ARG: {
-      handleCmdWithOneArg(cmd, args[0])
+      handleCmdWithOneArg(cmd, args[0]);
       break;
     }
     default: {
-      handleCmdWithManyArgs(cmd, args)
+      handleCmdWithManyArgs(cmd, args);
     }
   }
-}
+};
 
 const handleCmdWithNoArgs = (cmd) => {
-  const commands = { 
-    '.exit': process.exit, 
-    'ls': undefined,
-    'up': undefined,
+  const commands = {
+    '.exit': process.exit,
+    ls: undefined,
+    up: undefined,
   };
   const runCmd = commands[cmd] ? commands[cmd] : runCmdNotFound;
-  runCmd()
-}
+  runCmd();
+};
 
 const handleCmdWithOneArg = (cmd, arg) => {
   const commands = {
-    'os': handleOs,
-    'cd': undefined,
-    'cat': undefined,
-    'add': undefined,
-    'rm': undefined,
-    'hash': undefined,
+    os: handleOs,
+    cd: undefined,
+    cat: undefined,
+    add: undefined,
+    rm: undefined,
+    hash: undefined,
   };
   const runCmd = commands[cmd] ? commands[cmd] : runCmdNotFound;
   runCmd(arg);
@@ -62,12 +62,12 @@ const handleOs = (arg) => {
     '--cpus': undefined,
     '--homedir': undefined,
     '--username': undefined,
-    '--architecture': undefined
-  }
+    '--architecture': undefined,
+  };
   const runCmd = args[arg] ? args[arg] : runCmdNotFound;
   runCmd();
-}
+};
 
 const runCmdNotFound = () => {
   commentator.sayInvalidInput();
-}
+};

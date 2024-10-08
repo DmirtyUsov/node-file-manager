@@ -1,7 +1,6 @@
 import { homedir } from 'node:os';
 
 class FileSystemController {
-
   changeDir(directory) {
     try {
       process.chdir(directory);

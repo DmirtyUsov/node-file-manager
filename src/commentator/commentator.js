@@ -1,13 +1,12 @@
-const DEFAULT_NAME = 'Incognito😎'
+const DEFAULT_NAME = 'Incognito😎';
 class Commentator {
-
   _userName = DEFAULT_NAME;
 
   set userName(newName) {
     this._userName = newName || DEFAULT_NAME;
   }
 
-  say(message, useFn){
+  say(message, useFn) {
     useFn(message);
   }
 
@@ -37,7 +36,7 @@ class Commentator {
   }
 
   askCommand() {
-    const message = `Enter your command:`
+    const message = `Enter your command:`;
     this.say(message, console.info);
   }
 }

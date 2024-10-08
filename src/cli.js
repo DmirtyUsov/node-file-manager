@@ -12,18 +12,18 @@ export const waitUserInput = () => {
   rl.prompt();
 
   rl.on('line', (userInput) => {
-    const {cmd, args} = getCmdAndArgsFromUserInput(userInput);
-    
+    const { cmd, args } = getCmdAndArgsFromUserInput(userInput);
+
     if (cmd) {
       dispatch(cmd, args);
     }
 
     commentator.sayCurrentDir();
-    if(!cmd) {
+    if (!cmd) {
       commentator.askCommand();
     }
     rl.prompt();
-  })
+  });
 
   rl.on('close', () => console.log(''));
 };
