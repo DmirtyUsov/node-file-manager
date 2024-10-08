@@ -1,10 +1,10 @@
 import { commentator } from './src/commentator/index.js';
 import { getUserNameFromProcessArgv } from './src/input.parsers.js';
 import { waitUserInput } from './src/cli.js';
-import { fileSystemController } from './src/file-system.controller.js';
+import * as fileSystemController  from './src/file-system.controller.js';
 
 console.clear();
-fileSystemController.setHomeDir();
+fileSystemController.moveToHomeDir();
 commentator.userName = getUserNameFromProcessArgv();
 commentator.sayHi();
 commentator.sayCurrentDir();

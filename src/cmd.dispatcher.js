@@ -1,4 +1,5 @@
 import { commentator } from './commentator/index.js';
+import * as fileSystemController from './file-system.controller.js';
 import { logArchitecture, logCpus, logEOL, logHomeDir, logUserName } from './os.info.js';
 
 const NO_ARGS = 0;
@@ -26,7 +27,7 @@ const handleCmdWithNoArgs = (cmd) => {
   const commands = {
     '.exit': process.exit,
     ls: undefined,
-    up: undefined,
+    up: fileSystemController.moveToParentDir,
   };
   const runCmd = commands[cmd] ? commands[cmd] : runCmdNotFound;
   runCmd();

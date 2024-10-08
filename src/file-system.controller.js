@@ -1,18 +1,25 @@
 import { homedir } from 'node:os';
+import path from 'node:path';
 
-class FileSystemController {
-  changeDir(directory) {
-    try {
-      process.chdir(directory);
-      return true;
-    } catch {
-      return false;
-    }
+const changeDir = (directory) => {
+  try {
+    process.chdir(directory);
+    return true;
+  } catch(err) {
+    console.log(err);
+    return false;
   }
+};
 
-  setHomeDir() {
-    this.changeDir(homedir());
-  }
-}
+export const moveToHomeDir = () => {
+  changeDir(homedir());
+};
 
-export const fileSystemController = new FileSystemController();
+export const getCurrentDir = () => {
+  return process.cwd();
+};
+
+export const moveToParentDir = () => {
+  const currDir = getCurrentDir();
+  changeDir(path.resolve(currDir, '../'));
+};
