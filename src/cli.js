@@ -1,4 +1,5 @@
 import * as readline from 'node:readline/promises';
+import { commentator } from './commentator/index.js';
 
 export const waitUserInput = () => {
   const rl = readline.createInterface({
@@ -9,6 +10,7 @@ export const waitUserInput = () => {
   rl.prompt();
 
   rl.on('line', () => {
+    commentator.sayCurrentDir();
     rl.prompt();
   })
 
