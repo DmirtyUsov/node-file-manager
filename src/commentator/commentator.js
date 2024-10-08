@@ -35,6 +35,11 @@ class Commentator {
     const message = `❌ Operation failed`;
     this.say(message, console.error);
   }
+
+  askCommand() {
+    const message = `Enter your command:`
+    this.say(message, console.info);
+  }
 }
 
 export const commentator = new Commentator();
