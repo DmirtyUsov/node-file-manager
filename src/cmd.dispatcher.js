@@ -1,4 +1,5 @@
 import { commentator } from './commentator/index.js';
+import { logArchitecture, logCpus, logEOL, logHomeDir, logUserName } from './os.info.js';
 
 const NO_ARGS = 0;
 const ONE_ARG = 1;
@@ -58,11 +59,11 @@ const handleCmdWithManyArgs = (cmd, args) => {
 
 const handleOs = (arg) => {
   const args = {
-    '--EOL': undefined,
-    '--cpus': undefined,
-    '--homedir': undefined,
-    '--username': undefined,
-    '--architecture': undefined,
+    '--EOL': logEOL,
+    '--cpus': logCpus,
+    '--homedir': logHomeDir,
+    '--username': logUserName,
+    '--architecture': logArchitecture,
   };
   const runCmd = args[arg] ? args[arg] : runCmdNotFound;
   runCmd();
