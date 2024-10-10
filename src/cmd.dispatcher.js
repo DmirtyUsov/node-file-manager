@@ -1,5 +1,6 @@
 import { commentator } from './commentator.js';
 import * as fileSystemCmd from './file-system.commands.js';
+import * as miscCmd from './misc.commands.js';
 import * as osCmd from './os-info.commands.js';
 
 const NO_ARGS = 0;
@@ -25,7 +26,7 @@ export const dispatch = (cmd, args) => {
 
 const handleCmdWithNoArgs = (cmd) => {
   const commands = {
-    '.exit': process.exit,
+    '.exit': miscCmd.exit,
     ls: undefined,
     up: fileSystemCmd.moveToParentDir,
   };
