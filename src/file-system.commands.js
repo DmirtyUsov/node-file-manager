@@ -6,7 +6,7 @@ const changeDir = (directory) => {
   try {
     process.chdir(directory);
     return true;
-  } catch(err) {
+  } catch (err) {
     console.log(err);
     return false;
   }
@@ -24,8 +24,8 @@ export const getCurrentDir = () => {
 
 export const moveToParentDir = () => {
   const getCurrDirAnswer = getCurrentDir();
-  
-  const result = changeDir(path.resolve(getCurrDirAnswer.result, '../'));
-  
-  return new CmdAnswer(true, result)
+
+  const result = changeDir(path.resolve(getCurrDirAnswer.text, '../'));
+
+  return new CmdAnswer(true, result);
 };

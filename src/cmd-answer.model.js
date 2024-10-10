@@ -1,11 +1,20 @@
 export class CmdAnswer {
-  constructor(isOk = false, result = undefined) {
+  constructor(
+    isOk = false,
+    plainResult = undefined,
+    tabularResult = undefined
+  ) {
     this.isOk = isOk;
-    this._result=result;
+    this.plainResult = plainResult;
+    this.tabularResult = tabularResult;
   }
 
-  get result() {
-    return this._result;
+  get text() {
+    return this.plainResult;
+  }
+
+  get table() {
+    return this.tabularResult;
   }
 
   get isError() {

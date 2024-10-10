@@ -83,13 +83,12 @@ const handleRunCmd = (cmd, args, runCmd) => {
   }
 
   const cmdAnswer = runCmd(args);
-  
+
   if (cmdAnswer) {
-    if(cmdAnswer.isOk){
-      commentator.say(cmdAnswer.result, console.log);
+    if (cmdAnswer.isOk) {
+      commentator.say(cmdAnswer.text, console.log);
     } else {
       commentator.sayOperationFailed();
     }
-
   }
 };
