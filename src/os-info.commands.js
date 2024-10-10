@@ -19,5 +19,11 @@ export const getEOL = () => {
 };
 
 export const getCpus = () => {
-  return new CmdAnswer(true, os.cpus());
+  const MHZ_IN_GHZ = 1000;
+  const cpus = os.cpus();
+  const text = `Total number of logical CPU cores: ${cpus.length}`;
+  const table = cpus.map((cpu) => {
+    return { 'Model': cpu.model, 'Clock Rate, GHz': cpu.speed / MHZ_IN_GHZ };
+  });
+  return new CmdAnswer(true, text, table);
 };
