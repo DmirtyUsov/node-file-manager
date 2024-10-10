@@ -1,5 +1,5 @@
 import * as readline from 'node:readline/promises';
-import { commentator } from './commentator/index.js';
+import { commentator } from './commentator.js';
 import { getCmdAndArgsFromUserInput } from './input.parsers.js';
 import { dispatch } from './cmd.dispatcher.js';
 

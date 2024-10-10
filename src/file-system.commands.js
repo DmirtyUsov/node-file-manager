@@ -27,5 +27,5 @@ export const moveToParentDir = () => {
 
   const result = changeDir(path.resolve(getCurrDirAnswer.text, '../'));
 
-  return new CmdAnswer(true, result);
+  return new CmdAnswer(result);
 };

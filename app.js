@@ -1,4 +1,4 @@
-import { commentator } from './src/commentator/index.js';
+import { commentator } from './src/commentator.js';
 import { getUserNameFromProcessArgv } from './src/input.parsers.js';
 import { waitUserInput } from './src/cli.js';
 import * as fileSystemCmd from './src/file-system.commands.js';

@@ -1,4 +1,4 @@
-import { commentator } from './commentator/index.js';
+import { commentator } from './commentator.js';
 import * as fileSystemCmd from './file-system.commands.js';
 import * as osCmd from './os-info.commands.js';
 
@@ -84,11 +84,5 @@ const handleRunCmd = (cmd, args, runCmd) => {
 
   const cmdAnswer = runCmd(args);
 
-  if (cmdAnswer) {
-    if (cmdAnswer.isOk) {
-      commentator.say(cmdAnswer.text, console.log);
-    } else {
-      commentator.sayOperationFailed();
-    }
-  }
+  commentator.sayCmdAnswer(cmdAnswer);
 };

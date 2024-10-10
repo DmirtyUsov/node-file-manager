@@ -39,6 +39,25 @@ class Commentator {
     const message = `Enter your command:`;
     this.say(message, console.info);
   }
+
+  sayCmdAnswer(cmdAnswer) {
+    if (!cmdAnswer) {
+      return;
+    }
+
+    if (cmdAnswer.isError) {
+      commentator.sayOperationFailed();
+      return;
+    }
+
+    if (cmdAnswer.text) {
+      this.say(cmdAnswer.text, console.info);
+    }
+
+    if (cmdAnswer.table) {
+      this.say(cmdAnswer.table, console.table);
+    }
+  }
 }
 
 export const commentator = new Commentator();
