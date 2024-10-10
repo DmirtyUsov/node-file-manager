@@ -1,6 +1,6 @@
 import { commentator } from './commentator/index.js';
-import * as fileSystemController from './file-system.controller.js';
-import { logArchitecture, logCpus, logEOL, logHomeDir, logUserName } from './os.info.js';
+import * as fileSystemCmd from './file-system.commands.js';
+import * as osCmd from './os-info.commands.js';
 
 const NO_ARGS = 0;
 const ONE_ARG = 1;
@@ -14,7 +14,7 @@ export const dispatch = (cmd, args) => {
       break;
     }
     case ONE_ARG: {
-      handleCmdWithOneArg(cmd, args[0]);
+      handleCmdWithOneArg(cmd, args);
       break;
     }
     default: {
@@ -27,13 +27,14 @@ const handleCmdWithNoArgs = (cmd) => {
   const commands = {
     '.exit': process.exit,
     ls: undefined,
-    up: fileSystemController.moveToParentDir,
+    up: fileSystemCmd.moveToParentDir,
   };
-  const runCmd = commands[cmd] ? commands[cmd] : runCmdNotFound;
-  runCmd();
+  const runCmd = commands[cmd];
+
+  handleRunCmd(cmd, [], runCmd);
 };
 
-const handleCmdWithOneArg = (cmd, arg) => {
+const handleCmdWithOneArg = (cmd, args) => {
   const commands = {
     os: handleOs,
     cd: undefined,
@@ -42,8 +43,9 @@ const handleCmdWithOneArg = (cmd, arg) => {
     rm: undefined,
     hash: undefined,
   };
-  const runCmd = commands[cmd] ? commands[cmd] : runCmdNotFound;
-  runCmd(arg);
+  const runCmd = commands[cmd];
+
+  handleRunCmd(cmd, args, runCmd);
 };
 
 const handleCmdWithManyArgs = (cmd, args) => {
@@ -59,17 +61,35 @@ const handleCmdWithManyArgs = (cmd, args) => {
 };
 
 const handleOs = (arg) => {
-  const args = {
-    '--EOL': logEOL,
-    '--cpus': logCpus,
-    '--homedir': logHomeDir,
-    '--username': logUserName,
-    '--architecture': logArchitecture,
+  const knownArgs = {
+    '--EOL': osCmd.getEOL,
+    '--cpus': osCmd.getCpus,
+    '--homedir': osCmd.getHomeDir,
+    '--username': osCmd.getUserName,
+    '--architecture': osCmd.getArchitecture,
   };
-  const runCmd = args[arg] ? args[arg] : runCmdNotFound;
-  runCmd();
+  const runCmd = knownArgs[arg];
+  handleRunCmd('os', [arg], runCmd);
 };
 
 const runCmdNotFound = () => {
   commentator.sayInvalidInput();
+};
+
+const handleRunCmd = (cmd, args, runCmd) => {
+  if (runCmd === undefined) {
+    commentator.sayInvalidInput();
+    return;
+  }
+
+  const cmdAnswer = runCmd(args);
+  
+  if (cmdAnswer) {
+    if(cmdAnswer.isOk){
+      commentator.say(cmdAnswer.result, console.log);
+    } else {
+      commentator.sayOperationFailed();
+    }
+
+  }
 };
