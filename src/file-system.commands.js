@@ -2,6 +2,7 @@ import { homedir } from 'node:os';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { CmdAnswer } from './cmd-answer.model.js';
+import { createReadStream } from 'node:fs';
 
 const changeDir = (directory) => {
   const answer = new CmdAnswer();
@@ -9,7 +10,7 @@ const changeDir = (directory) => {
     process.chdir(directory);
     answer.isOk = true;
   } catch (err) {
-    answer.plainResult = `Error: ${err.code} \nfor destination: ${err.dest}`;
+    answer.plainResult = err.message;
     answer.isOk = false;
   }
   return answer;
@@ -43,7 +44,6 @@ export const moveToHomeDir = () => {
 export const moveToDir = (args) => {
   const pathToDir = args[0];
   return changeDir(pathToDir);
-
 };
 
 export const getCurrentDir = () => {
@@ -77,5 +77,29 @@ export const getContent = async () => {
   }
 
   answer.isOk = true;
+  return answer;
+};
+
+export const concatenate = async (args) => {
+  const pathToFile = args[0];
+  const answer = new CmdAnswer();
+
+  try {
+    const fileStream = createReadStream(pathToFile);
+
+    fileStream.pipe(process.stdout);
+
+    await new Promise((resolve, reject) => {
+      fileStream.on('end', ()=>{
+        answer.isOk = true;
+        resolve();
+      })
+      fileStream.on("error", (err) => {
+        reject(err)
+      })
+    })
+  } catch (error) {
+    answer.plainResult = error.message;
+  }
   return answer;
 };

@@ -42,7 +42,7 @@ const mapCmd2Fn = {
   // one arg
   os: handleOs,
   cd: fileSystemCmd.moveToDir,
-  cat: undefined,
+  cat: fileSystemCmd.concatenate,
   add: undefined,
   rm: undefined,
   hash: undefined,
