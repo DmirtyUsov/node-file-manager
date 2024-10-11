@@ -6,12 +6,11 @@ import * as osCmd from './os-info.commands.js';
 const NO_ARGS = 0;
 const ONE_ARG = 1;
 
-export const dispatch = (cmd, args) => {
+export const dispatch = async (cmd, args) => {
   const argsCount = args ? args.length : 0;
-  console.log({ cmd }, { argsCount });
   switch (argsCount) {
     case NO_ARGS: {
-      handleCmdWithNoArgs(cmd);
+      await handleCmdWithNoArgs(cmd);
       break;
     }
     case ONE_ARG: {
@@ -24,15 +23,15 @@ export const dispatch = (cmd, args) => {
   }
 };
 
-const handleCmdWithNoArgs = (cmd) => {
+const handleCmdWithNoArgs = async (cmd) => {
   const commands = {
     '.exit': miscCmd.exit,
-    ls: undefined,
+    ls: fileSystemCmd.getContent,
     up: fileSystemCmd.moveToParentDir,
   };
   const runCmd = commands[cmd];
 
-  handleRunCmd(cmd, [], runCmd);
+  return await handleRunCmd(cmd, [], runCmd);
 };
 
 const handleCmdWithOneArg = (cmd, args) => {
@@ -77,13 +76,15 @@ const runCmdNotFound = () => {
   commentator.sayInvalidInput();
 };
 
-const handleRunCmd = (cmd, args, runCmd) => {
+const handleRunCmd = async (cmd, args, runCmd) => {
   if (runCmd === undefined) {
     commentator.sayInvalidInput();
     return;
   }
 
-  const cmdAnswer = runCmd(args);
+  const cmdAnswer = await runCmd(args);
 
   commentator.sayCmdAnswer(cmdAnswer);
+
+  return cmdAnswer;
 };

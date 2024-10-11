@@ -3,7 +3,7 @@ import { commentator } from './commentator.js';
 import { getCmdAndArgsFromUserInput } from './input.parsers.js';
 import { dispatch } from './cmd.dispatcher.js';
 
-export const waitUserInput = () => {
+export const waitUserInput = async () => {
   const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
@@ -11,11 +11,11 @@ export const waitUserInput = () => {
 
   rl.prompt();
 
-  rl.on('line', (userInput) => {
+  rl.on('line', async (userInput) => {
     const { cmd, args } = getCmdAndArgsFromUserInput(userInput);
 
     if (cmd) {
-      dispatch(cmd, args);
+      await dispatch(cmd, args);
     }
 
     commentator.sayCurrentDir();
