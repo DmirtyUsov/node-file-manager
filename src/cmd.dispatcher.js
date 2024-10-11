@@ -3,88 +3,53 @@ import * as fileSystemCmd from './file-system.commands.js';
 import * as miscCmd from './misc.commands.js';
 import * as osCmd from './os-info.commands.js';
 
-const NO_ARGS = 0;
-const ONE_ARG = 1;
-
 export const dispatch = async (cmd, args) => {
-  const argsCount = args ? args.length : 0;
-  switch (argsCount) {
-    case NO_ARGS: {
-      await handleCmdWithNoArgs(cmd);
-      break;
-    }
-    case ONE_ARG: {
-      handleCmdWithOneArg(cmd, args);
-      break;
-    }
-    default: {
-      handleCmdWithManyArgs(cmd, args);
-    }
+  const fnForRun = mapCmd2Fn[cmd];
+
+  await runFn(cmd, args, fnForRun);
+};
+
+const runFn = async (cmd, args, fnForRun) => {
+  if (fnForRun === undefined) {
+    commentator.sayInvalidInput();
+    return;
   }
-};
 
-const handleCmdWithNoArgs = async (cmd) => {
-  const commands = {
-    '.exit': miscCmd.exit,
-    ls: fileSystemCmd.getContent,
-    up: fileSystemCmd.moveToParentDir,
-  };
-  const runCmd = commands[cmd];
+  const cmdAnswer = await fnForRun(args);
 
-  return await handleRunCmd(cmd, [], runCmd);
-};
+  commentator.sayCmdAnswer(cmdAnswer);
 
-const handleCmdWithOneArg = (cmd, args) => {
-  const commands = {
-    os: handleOs,
-    cd: undefined,
-    cat: undefined,
-    add: undefined,
-    rm: undefined,
-    hash: undefined,
-  };
-  const runCmd = commands[cmd];
-
-  handleRunCmd(cmd, args, runCmd);
-};
-
-const handleCmdWithManyArgs = (cmd, args) => {
-  const commands = {
-    rn: undefined,
-    cp: undefined,
-    mv: undefined,
-    compress: undefined,
-    decompress: undefined,
-  };
-  const runCmd = commands[cmd] ? commands[cmd] : runCmdNotFound;
-  runCmd(args);
+  return cmdAnswer;
 };
 
 const handleOs = (arg) => {
-  const knownArgs = {
+  const arg2fn = {
     '--EOL': osCmd.getEOL,
     '--cpus': osCmd.getCpus,
     '--homedir': osCmd.getHomeDir,
     '--username': osCmd.getUserName,
     '--architecture': osCmd.getArchitecture,
   };
-  const runCmd = knownArgs[arg];
-  handleRunCmd('os', [arg], runCmd);
+  const fnForRun = arg2fn[arg];
+  runFn('os', [arg], fnForRun);
 };
 
-const runCmdNotFound = () => {
-  commentator.sayInvalidInput();
-};
-
-const handleRunCmd = async (cmd, args, runCmd) => {
-  if (runCmd === undefined) {
-    commentator.sayInvalidInput();
-    return;
-  }
-
-  const cmdAnswer = await runCmd(args);
-
-  commentator.sayCmdAnswer(cmdAnswer);
-
-  return cmdAnswer;
+const mapCmd2Fn = {
+  // no args
+  '.exit': miscCmd.exit,
+  ls: fileSystemCmd.getContent,
+  up: fileSystemCmd.moveToParentDir,
+  // one arg
+  os: handleOs,
+  cd: undefined,
+  cat: undefined,
+  add: undefined,
+  rm: undefined,
+  hash: undefined,
+  // many args
+  rn: undefined,
+  cp: undefined,
+  mv: undefined,
+  compress: undefined,
+  decompress: undefined,
 };
