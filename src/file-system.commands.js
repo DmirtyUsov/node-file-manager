@@ -103,3 +103,8 @@ export const concatenate = async (args) => {
   }
   return answer;
 };
+
+export const createFile = async (args) => {
+  const file = args[0]; 
+  console.log(path.parse(file));
+}

@@ -3,8 +3,25 @@ import * as fileSystemCmd from './file-system.commands.js';
 import * as miscCmd from './misc.commands.js';
 import * as osCmd from './os-info.commands.js';
 
+const NO_ARGS = 0;
+const ONE_ARG = 1;
+
 export const dispatch = async (cmd, args) => {
-  const fnForRun = mapCmd2Fn[cmd];
+  const argsCount = args.length;
+  let fnForRun = undefined;
+  switch (argsCount) {
+    case NO_ARGS: {
+      fnForRun = mapCmdNoArgs2Fn[cmd];
+      break;
+    }
+    case ONE_ARG: {
+      fnForRun = mapCmdOneArg2Fn[cmd];
+      break;
+    }
+    default:
+      fnForRun = mapCmdManyArgs2Fn[cmd];
+      break;
+  }
 
   await runFn(cmd, args, fnForRun);
 };
@@ -34,19 +51,22 @@ const handleOs = (arg) => {
   runFn('os', [arg], fnForRun);
 };
 
-const mapCmd2Fn = {
-  // no args
+const mapCmdNoArgs2Fn = {
   '.exit': miscCmd.exit,
   ls: fileSystemCmd.getContent,
   up: fileSystemCmd.changeDirToParent,
-  // one arg
+};
+
+const mapCmdOneArg2Fn = {
   os: handleOs,
   cd: fileSystemCmd.changeDirTo,
   cat: fileSystemCmd.concatenate,
-  add: undefined,
+  add: fileSystemCmd.createFile,
   rm: undefined,
   hash: undefined,
-  // many args
+};
+
+const mapCmdManyArgs2Fn = {
   rn: undefined,
   cp: undefined,
   mv: undefined,
