@@ -4,7 +4,7 @@ import { waitUserInput } from './src/cli.js';
 import * as fileSystemCmd from './src/file-system.commands.js';
 
 console.clear();
-fileSystemCmd.moveToHomeDir();
+fileSystemCmd.changeDirToHome();
 commentator.userName = getUserNameFromProcessArgv();
 commentator.sayHi();
 commentator.sayCurrentDir();

@@ -37,11 +37,11 @@ const compareDirEntries = (entryA, entryB) => {
   return entryA.isDirectory() ? -1 : 1;
 };
 
-export const moveToHomeDir = () => {
-  return moveToDir([homedir()]);
+export const changeDirToHome = () => {
+  return changeDirTo([homedir()]);
 };
 
-export const moveToDir = (args) => {
+export const changeDirTo = (args) => {
   const pathToDir = args[0];
   return changeDir(pathToDir);
 };
@@ -51,10 +51,10 @@ export const getCurrentDir = () => {
   return new CmdAnswer(true, result);
 };
 
-export const moveToParentDir = () => {
+export const changeDirToParent = () => {
   const getCurrDirAnswer = getCurrentDir();
 
-  const answer = moveToDir([path.resolve(getCurrDirAnswer.text, '../')]);
+  const answer = changeDirTo([path.resolve(getCurrDirAnswer.text, '../')]);
 
   return answer;
 };
@@ -90,14 +90,14 @@ export const concatenate = async (args) => {
     fileStream.pipe(process.stdout);
 
     await new Promise((resolve, reject) => {
-      fileStream.on('end', ()=>{
+      fileStream.on('end', () => {
         answer.isOk = true;
         resolve();
-      })
-      fileStream.on("error", (err) => {
-        reject(err)
-      })
-    })
+      });
+      fileStream.on('error', (err) => {
+        reject(err);
+      });
+    });
   } catch (error) {
     answer.plainResult = error.message;
   }

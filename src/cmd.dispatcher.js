@@ -38,10 +38,10 @@ const mapCmd2Fn = {
   // no args
   '.exit': miscCmd.exit,
   ls: fileSystemCmd.getContent,
-  up: fileSystemCmd.moveToParentDir,
+  up: fileSystemCmd.changeDirToParent,
   // one arg
   os: handleOs,
-  cd: fileSystemCmd.moveToDir,
+  cd: fileSystemCmd.changeDirTo,
   cat: fileSystemCmd.concatenate,
   add: undefined,
   rm: undefined,
