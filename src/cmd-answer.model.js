@@ -7,6 +7,7 @@ export class CmdAnswer {
     this.isOk = isOk;
     this.plainResult = plainResult;
     this.tabularResult = tabularResult;
+    this.isInvalidInput = false;
   }
 
   get text() {

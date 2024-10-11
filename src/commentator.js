@@ -45,6 +45,14 @@ class Commentator {
       return;
     }
 
+    if(cmdAnswer.isInvalidInput){
+      commentator.sayInvalidInput()
+      if (cmdAnswer.text) {
+        commentator.say(cmdAnswer.text, console.warn);
+      }
+      return;
+    }
+
     if (cmdAnswer.isError) {
       commentator.sayOperationFailed();
       if (cmdAnswer.text) {
