@@ -105,6 +105,23 @@ export const concatenate = async (args) => {
 };
 
 export const createFile = async (args) => {
-  const file = args[0]; 
-  console.log(path.parse(file));
-}
+  const answer = new CmdAnswer();
+  const file = args[0];
+
+  const { dir, base } = path.parse(file);
+  if (dir) {
+    answer.isInvalidInput = true;
+    answer.plainResult = `Enter only file name: ${base}`;
+    return answer;
+  }
+
+  try {
+     await fs.writeFile(base, '', { flag: 'wx' });
+     answer.isOk = true;
+     answer.plainResult = `${base} added to current directory.`
+  } catch (error) {
+    answer.plainResult = error.message;
+  }
+
+  return answer;
+};
