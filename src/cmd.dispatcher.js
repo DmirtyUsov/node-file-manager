@@ -41,7 +41,7 @@ const mapCmd2Fn = {
   up: fileSystemCmd.moveToParentDir,
   // one arg
   os: handleOs,
-  cd: undefined,
+  cd: fileSystemCmd.moveToDir,
   cat: undefined,
   add: undefined,
   rm: undefined,

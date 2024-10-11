@@ -47,6 +47,7 @@ class Commentator {
 
     if (cmdAnswer.isError) {
       commentator.sayOperationFailed();
+      commentator.say(cmdAnswer.text, console.warn);
       return;
     }
 

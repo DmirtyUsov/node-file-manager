@@ -4,13 +4,15 @@ import path from 'node:path';
 import { CmdAnswer } from './cmd-answer.model.js';
 
 const changeDir = (directory) => {
+  const answer = new CmdAnswer();
   try {
     process.chdir(directory);
-    return true;
+    answer.isOk = true;
   } catch (err) {
-    console.log(err);
-    return false;
+    answer.plainResult = `Error: ${err.code} \nfor destination: ${err.dest}`;
+    answer.isOk = false;
   }
+  return answer;
 };
 
 const getDirEntryType = (dirEntry) => {
@@ -35,8 +37,13 @@ const compareDirEntries = (entryA, entryB) => {
 };
 
 export const moveToHomeDir = () => {
-  const isOk = changeDir(homedir());
-  return new CmdAnswer(isOk);
+  return moveToDir([homedir()]);
+};
+
+export const moveToDir = (args) => {
+  const pathToDir = args[0];
+  return changeDir(pathToDir);
+
 };
 
 export const getCurrentDir = () => {
@@ -47,9 +54,9 @@ export const getCurrentDir = () => {
 export const moveToParentDir = () => {
   const getCurrDirAnswer = getCurrentDir();
 
-  const result = changeDir(path.resolve(getCurrDirAnswer.text, '../'));
+  const answer = moveToDir([path.resolve(getCurrDirAnswer.text, '../')]);
 
-  return new CmdAnswer(result);
+  return answer;
 };
 
 export const getContent = async () => {
