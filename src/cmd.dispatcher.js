@@ -68,7 +68,7 @@ const mapCmdOneArg2Fn = {
   cat: fileSystemCmd.concatenate,
   add: fileSystemCmd.createFile,
   rm: fileSystemCmd.deleteFile,
-  hash: undefined,
+  hash: miscCmd.calcFileHash,
 };
 
 const mapCmdTwoArgs2Fn = {

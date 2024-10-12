@@ -37,7 +37,7 @@ const compareDirEntries = (entryA, entryB) => {
   return entryA.isDirectory() ? -1 : 1;
 };
 
-const checkIsFile = async (pathToFile) => {
+export const checkIsFile = async (pathToFile) => {
   const answer = new CmdAnswer();
   let stats;
 
@@ -48,11 +48,13 @@ const checkIsFile = async (pathToFile) => {
     return answer;
   }
 
-  if (!stats.isFile()) {
-    (answer.isInvalidInput = true), (answer.plainResult = 'Not a file');
+  if (stats.isFile()) {
+    answer.isOk = true;
     return answer;
   }
-  answer.isOk = true;
+
+  answer.isInvalidInput = true;
+  answer.plainResult = `${pathToFile} Not a file.`;
   return answer;
 };
 
@@ -158,9 +160,7 @@ export const deleteFile = async (args) => {
     await fs.rm(pathToFile);
     answer.isOk = true;
     answer.plainResult = `${pathToFile} deleted.`;
-  } catch (error) {
-    
-  }
-  
+  } catch (error) {}
+
   return answer;
 };
