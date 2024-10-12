@@ -5,11 +5,12 @@ import * as osCmd from './os-info.commands.js';
 
 const NO_ARGS = 0;
 const ONE_ARG = 1;
+const TWO_ARGS = 2;
 
 export const dispatch = async (cmd, args) => {
-  const argsCount = args.length;
   let fnForRun = undefined;
-  switch (argsCount) {
+
+  switch (args.length) {
     case NO_ARGS: {
       fnForRun = mapCmdNoArgs2Fn[cmd];
       break;
@@ -18,8 +19,12 @@ export const dispatch = async (cmd, args) => {
       fnForRun = mapCmdOneArg2Fn[cmd];
       break;
     }
+    case TWO_ARGS: {
+      fnForRun = mapCmdTwoArgs2Fn[cmd];
+      break;
+    }
     default:
-      fnForRun = mapCmdManyArgs2Fn[cmd];
+      fnForRun = undefined;
       break;
   }
 
@@ -66,7 +71,7 @@ const mapCmdOneArg2Fn = {
   hash: undefined,
 };
 
-const mapCmdManyArgs2Fn = {
+const mapCmdTwoArgs2Fn = {
   rn: undefined,
   cp: undefined,
   mv: undefined,
