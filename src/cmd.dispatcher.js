@@ -72,8 +72,8 @@ const mapCmdOneArg2Fn = {
 };
 
 const mapCmdTwoArgs2Fn = {
-  rn: undefined,
-  cp: undefined,
+  rn: fileSystemCmd.renameFile,
+  cp: fileSystemCmd.copyFile,
   mv: undefined,
   compress: undefined,
   decompress: undefined,

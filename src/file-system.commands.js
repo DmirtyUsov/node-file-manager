@@ -2,7 +2,8 @@ import { homedir } from 'node:os';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { CmdAnswer } from './cmd-answer.model.js';
-import { createReadStream } from 'node:fs';
+import { createReadStream, createWriteStream } from 'node:fs';
+import { pipeline } from 'node:stream/promises';
 
 const changeDir = (directory) => {
   const answer = new CmdAnswer();
@@ -160,7 +161,95 @@ export const deleteFile = async (args) => {
     await fs.rm(pathToFile);
     answer.isOk = true;
     answer.plainResult = `${pathToFile} deleted.`;
-  } catch (error) {}
+  } catch (error) {
+    answer.plainResult = error.message;
+  }
+
+  return answer;
+};
+
+export const renameFile = async (args) => {
+  const pathToFile = args[0];
+  const { dir, base: oldName } = path.parse(pathToFile);
+  let answer = await checkIsFile(pathToFile);
+
+  if (answer.isError) {
+    return answer;
+  }
+
+  if (answer.isInvalidInput) {
+    answer.plainResult = `${answer.plainResult}\nOnly able to rename a file.`;
+    return answer;
+  }
+
+  const { dir: emptyDir, base: newName } = path.parse(args[1]);
+  if (emptyDir) {
+    answer.isInvalidInput = true;
+    answer.plainResult = `The second argument must contain only the new filename: ${newName}`;
+    return answer;
+  }
+  const pathToNewFile = path.join(dir, newName);
+
+  answer = await checkIsFile(pathToNewFile);
+  if (answer.isOk) {
+    answer.isInvalidInput = true;
+    answer.isOk = false;
+    answer.plainResult = `${pathToNewFile} already exists.`;
+    return answer;
+  }
+
+  try {
+    await fs.rename(pathToFile, newName);
+    answer.isOk = true;
+    answer.plainResult = `${pathToFile} renamed to ${newName}`;
+  } catch (error) {
+    answer.plainResult = error.message;
+  }
+
+  return answer;
+};
+
+export const copyFile = async (args) => {
+  const pathToSrc = args[0];
+  let answer = await checkIsFile(pathToSrc);
+
+  if (answer.isError) {
+    return answer;
+  }
+
+  if (answer.isInvalidInput) {
+    answer.plainResult = `${answer.plainResult}\nOnly able to copy a file.`;
+    return answer;
+  }
+
+  const { base: fileName } = path.parse(pathToSrc);
+
+  const { dir: dstDir, base: dstBase, ext } = path.parse(args[1]);
+
+  if (ext) {
+    answer.isInvalidInput = true;
+    answer.plainResult = `The second argument must contain only path to destination folder: ${dstDir}`;
+    return answer;
+  }
+  const pathToNewFile = path.join(dstDir, dstBase, fileName);
+
+  answer = await checkIsFile(pathToNewFile);
+  if (answer.isOk) {
+    answer.isInvalidInput = true;
+    answer.isOk = false;
+    answer.plainResult = `${pathToNewFile} already exists.`;
+    return answer;
+  }
+
+  try {
+    const srcStream = createReadStream(pathToSrc);
+    const dstStream = createWriteStream(pathToNewFile, { flags: 'wx' });
+    await pipeline(srcStream, dstStream);
+    answer.isOk = true;
+    answer.plainResult = `${pathToSrc} copied to ${pathToNewFile}`;
+  } catch (error) {
+    answer.plainResult = error.message;
+  }
 
   return answer;
 };
