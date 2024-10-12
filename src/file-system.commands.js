@@ -253,3 +253,18 @@ export const copyFile = async (args) => {
 
   return answer;
 };
+
+export const moveFile = async (args) => {
+  let answer = await copyFile(args);
+
+  if (answer.isError || answer.isInvalidInput) {
+    return answer;
+  }
+
+  const copyAnswerText = answer.text;
+
+  answer = await deleteFile(args);
+  answer.plainResult = `${copyAnswerText}\n${answer.plainResult}`;
+
+  return answer;
+};

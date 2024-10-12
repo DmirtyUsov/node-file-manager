@@ -20,12 +20,11 @@ export const calcFileHash = async (args) => {
     const fileStream = createReadStream(pathToFile);
 
     await new Promise((resolve, reject) => {
-
       fileStream.on('readable', () => {
         const content = fileStream.read();
         if (content) {
           hash.update(content);
-        } 
+        }
       });
 
       fileStream.on('end', () => {
@@ -42,5 +41,4 @@ export const calcFileHash = async (args) => {
     answer.plainResult = error.message;
   }
   return answer;
-
 };
