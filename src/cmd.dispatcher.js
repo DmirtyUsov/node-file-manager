@@ -62,7 +62,7 @@ const mapCmdOneArg2Fn = {
   cd: fileSystemCmd.changeDirTo,
   cat: fileSystemCmd.concatenate,
   add: fileSystemCmd.createFile,
-  rm: undefined,
+  rm: fileSystemCmd.deleteFile,
   hash: undefined,
 };
 

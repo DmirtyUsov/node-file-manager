@@ -37,6 +37,25 @@ const compareDirEntries = (entryA, entryB) => {
   return entryA.isDirectory() ? -1 : 1;
 };
 
+const checkIsFile = async (pathToFile) => {
+  const answer = new CmdAnswer();
+  let stats;
+
+  try {
+    stats = await fs.stat(pathToFile);
+  } catch (error) {
+    answer.plainResult = error.message;
+    return answer;
+  }
+
+  if (!stats.isFile()) {
+    (answer.isInvalidInput = true), (answer.plainResult = 'Not a file');
+    return answer;
+  }
+  answer.isOk = true;
+  return answer;
+};
+
 export const changeDirToHome = () => {
   return changeDirTo([homedir()]);
 };
@@ -116,12 +135,32 @@ export const createFile = async (args) => {
   }
 
   try {
-     await fs.writeFile(base, '', { flag: 'wx' });
-     answer.isOk = true;
-     answer.plainResult = `${base} added to current directory.`
+    await fs.writeFile(base, '', { flag: 'wx' });
+    answer.isOk = true;
+    answer.plainResult = `${base} added to current directory.`;
   } catch (error) {
     answer.plainResult = error.message;
   }
 
+  return answer;
+};
+
+export const deleteFile = async (args) => {
+  const pathToFile = args[0];
+  const answer = await checkIsFile(pathToFile);
+
+  if (answer.isInvalidInput) {
+    answer.plainResult = 'Only able to delete a file.';
+    return answer;
+  }
+
+  try {
+    await fs.rm(pathToFile);
+    answer.isOk = true;
+    answer.plainResult = `${pathToFile} deleted.`;
+  } catch (error) {
+    
+  }
+  
   return answer;
 };
