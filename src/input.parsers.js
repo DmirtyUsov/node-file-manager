@@ -5,5 +5,6 @@ export const getUserNameFromProcessArgv = () => {
 
 export const getCmdAndArgsFromUserInput = (inputText) => {
   const [cmd, ...args] = inputText.trim().split(' ');
-  return { cmd, args };
+  const argsQuotesFree = args.map(arg => arg.replace(/^["'](.+(?=["']$))["']$/, '$1'));
+  return { cmd, args: argsQuotesFree };
 };
