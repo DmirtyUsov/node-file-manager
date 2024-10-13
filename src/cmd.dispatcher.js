@@ -75,6 +75,6 @@ const mapCmdTwoArgs2Fn = {
   rn: fileSystemCmd.renameFile,
   cp: fileSystemCmd.copyFile,
   mv: fileSystemCmd.moveFile,
-  compress: undefined,
-  decompress: undefined,
+  compress: miscCmd.compress,
+  decompress: miscCmd.decompress,
 };
